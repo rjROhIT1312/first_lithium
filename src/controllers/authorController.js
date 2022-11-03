@@ -3,7 +3,7 @@ const orderModel = require("../models/order");
 const productModel = require("../models/productModel");
 const userModel = require("../models/userModel1");
 
-// module.exports.createAuthor= createAuthor
+
 
 const createUser = async function (req, res) {
   let data = req.body;
@@ -20,38 +20,38 @@ const createProduct = async function (req, res) {
 };
 
 const createOrder = async function (req, res) {
-  let ui = req.body.userId;
-  let checkui = await userModel.findOne({ _id: ui });
-  if (!checkui) {
+  let userId= req.body.userId;
+  let checkUserId = await userModel.findOne({ _id: userId});
+  if (!checkUserId) {
     return res.send("Invalid user Id");
   }
-  let pi = req.body.productId;
-  let checkpi = await productModel.findOne({ _id: pi });
-  if (!checkpi) {
+  let proId = req.body.productId;
+  let checkProduct = await productModel.findOne({ _id: proId });
+  if (!checkProduct) {
     return res.send("Invalid product Id");
   }
-  // let currentp=await productModel.findOne({_id:pi})
-  let prr = checkpi.price;
+ 
+  let productPrice = checkProduct.price;
   let data = req.body;
-  // console.log(req.isfreeappuser)
+ 
   data.isFreeAppUser = isFreeAppUser;
   if (data.isFreeAppUser == "true") {
     data.amount = 0;
     let savedData = await orderModel.create(data);
     return res.send(savedData);
   }
-  // let cu= await userModel.findById(ui)
-  let ba = checkui.balance;
-  console.log(ba);
-  if (prr > ba) {
+
+  let bal = checkUserId.balance;
+  console.log(bal);
+  if (productPrice > bal) {
     return res.send("Insufficient Balance");
   }
   let user1 = await userModel.findOneAndUpdate(
-    { _id: ui },
-    { $inc: { balance: -prr } },
+    { _id: userId},
+    { $inc: { balance: -productPrice } },
     { new: true }
   );
-  data.amount = prr;
+  data.amount = productPrice;
   let ordercr = await orderModel.create(data);
   res.send({ msg: ordercr, user1 });
 };
