@@ -1,14 +1,18 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
-const createUser = async function (abcd, xyz) {
-  let data = abcd.body;
+const createUser = async function (req,res) {
+  try{
+  let data = req.body;
   let savedData = await userModel.create(data);
-  console.log(abcd.newAtribute);
-  xyz.send({ msg: savedData });
+  res.status(201).send({ msg: savedData });
+  }catch(error){
+      res.status(500).send({msg:error.message})
+  }
 };
 
 const loginUser = async function (req, res) {
+  try{
   let userName = req.body.emailId;
   let password = req.body.password;
 
@@ -22,10 +26,14 @@ const loginUser = async function (req, res) {
     { userId: user._id.toString() },
     "functionup-plutonium-very-very-secret-key"
   );
-  res.send({ status: true, token: token });
+  res.status(200).send({ status: true, token: token });
+  }catch(error){
+    return res.status(400).send({msg:error.message})
+  }
 };
 
 const getUserData = async function (req, res) {
+  try{
   let token = req.headers["x-Auth-token"];
   if (!token) token = req.headers["x-auth-token"];
   if (!token) return res.send({ status: false, msg: "token must be present" });
@@ -43,6 +51,9 @@ const getUserData = async function (req, res) {
     return res.send({ status: false, msg: "No such user exists" });
 
   res.send({ status: true, data: userDetails });
+  }catch(error){
+  res.status(500).send({msg:error.message})
+  }
 };
 
 const updateUser = async function (req, res) {
@@ -124,3 +135,15 @@ module.exports.updateUser = updateUser;
 module.exports.loginUser = loginUser;
 module.exports.deleteUser = deleteUser;
 module.exports.userPosts = userPosts;
+
+
+
+
+//200 ok
+//201 new created
+//204 no content
+//400 bad request 
+//401 unauthorized
+//403 Forbidden
+//404 not found
+//500 Internal Server Error
