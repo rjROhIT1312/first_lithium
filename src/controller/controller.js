@@ -6,12 +6,12 @@ const emailValidator = require("email-validator")
 
 const authors = async function (req, res) {
     try {
-        let {fname , lname , title , password } = req.body
+        let { fname, lname, title, password } = req.body
 
 
-        
-        if(!fname || !lname || !password) return  res.status(401).send({Status : flase , msg:"Mandatory field is not given"})
-        
+
+        if (!fname || !lname || !password) return res.status(401).send({ Status: flase, msg: "Mandatory field is not given" })
+
         let email = req.body.email
         if (!emailValidator.validate(email)) return res.status(401).send("Email id is invalid.")
 
@@ -34,28 +34,32 @@ const authors = async function (req, res) {
 
 const blog = async function (req, res) {
 
-    try{
-    let data = req.body
-
-    let isPublished = req.body.isPublished
-    let isDeleted = req.body.isDeleted
-    let date = Date.now()
-    
-    if(isPublished){
-        req.body.publishedAt = date
-        isPublished = true
-    }
-
-    if(isDeleted){
-        req.body.deletedAt = date
-        isDeleted = true
-    }
+    try {
+        let { title, body, authorId , category } = req.body
 
 
-    let newData = await blogModel.create(data)
-    res.status(201).send({ ok: newData })
 
-    }catch(err){
+        if (!title || !body || !authorId || !category) return res.status(401).send({ Status: flase, msg: "Mandatory field is not given" })
+
+        let isPublished = req.body.isPublished
+        let isDeleted = req.body.isDeleted
+        let date = Date.now()
+
+        if (isPublished) {
+            req.body.publishedAt = date
+            isPublished = true
+        }
+
+        if (isDeleted) {
+            req.body.deletedAt = date
+            isDeleted = true
+        }
+
+
+        let newData = await blogModel.create(data)
+        res.status(201).send({ ok: newData })
+
+    } catch (err) {
         console.log(err)
         res.status(500).send({ msg: err.message })
     }
@@ -67,4 +71,4 @@ const blog = async function (req, res) {
 
 
 
-module.exports = {authors , blog}
+module.exports = { authors, blog }
