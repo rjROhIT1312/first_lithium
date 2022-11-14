@@ -17,4 +17,6 @@ router.post("/authors", controller.authors)
 router.post("/blog", controller.blog)
 
 
+router.get("/blog", controller.allBlog)
+
 module.exports = router
