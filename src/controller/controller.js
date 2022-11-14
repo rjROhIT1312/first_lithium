@@ -19,7 +19,7 @@ const authors = async function (req, res) {
         let email = req.body.email
         
         
-        if (!emailValidator.validate(email)) return res.status(400).send("Email id is invalid.")
+        if (!emailValidator.validate(email)) return res.status(400).send({ Status: false, msg: "Invalid Email id , please give valid email id." })
         
         // // Or
         
