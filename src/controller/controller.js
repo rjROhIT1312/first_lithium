@@ -48,9 +48,8 @@ const blog = async function (req, res) {
 
         let data = req.body
 
-        if (!title || !body || !authorId || !category) return res.status(400).send({ Status: flase, msg: "Mandatory field is not given" })
+        if (!title || !body || !authorId || !category) return res.status(400).send({ Status: false, msg: "Mandatory field is not given" })
 
-        let isPublished = req.body.isPublished
         let isDeleted = req.body.isDeleted
         let date = Date.now()
 
