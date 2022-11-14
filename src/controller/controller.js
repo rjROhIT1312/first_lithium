@@ -22,8 +22,8 @@ const authors = async function (req, res) {
         if (!emailValidator.validate(email)) return res.status(400).send({ Status: false, msg: "Invalid Email id , please give valid email id." })
         
         // // Or
-        
-        // let emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/
+
+        //  let emailFormat = /^([a-zA-Z0-9\.-]+)@([a-zA-Z0-9-]+).([a-z]{2,20})$/
         // if (!email.match(emailFormat)) return res.status(400).send("Email id is invalid.")
 
 
@@ -50,6 +50,7 @@ const blog = async function (req, res) {
 
         if (!title || !body || !authorId || !category) return res.status(400).send({ Status: false, msg: "Mandatory field is not given" })
 
+        let isPublished = req.body.isPublished
         let isDeleted = req.body.isDeleted
         let date = Date.now()
 
@@ -68,7 +69,7 @@ const blog = async function (req, res) {
 
         let isAuthorPresent = await authorModel.findOne({_id : authorId})
 
-        if(! isAuthorPresent) return res.status(400).send({ Status: false, msg: "Invalid Author Id" })
+        if(! isAuthorPresent ) return res.status(400).send({ Status: false, msg: "Invalid Author Id" })
 
 
 
