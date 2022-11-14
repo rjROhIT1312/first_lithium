@@ -6,29 +6,53 @@ const emailValidator = require("email-validator")
 
 const authors = async function (req, res) {
     try {
-        let data = req.body
+        let {fname , lname , title , password } = req.body
+
+
+        
+        if(!fname || !lname || !password) return  res.status(401).send({Status : flase , msg:"Mandatory field is not given"})
+        
+        let email = req.body.email
+        if (!emailValidator.validate(email)) return res.status(401).send("Email id is invalid.")
+
 
         let newData = await authorModel.create(data)
 
-        let email = req.body.email
 
-        if (!emailValidator.validate(email)) return res.send("Email id is invalid.")
 
         res.status(201).send({ status: true, data: newData })
 
     } catch (err) {
         console.log(err)
-        res.send({ msg: err.message })
+        res.status(500).send({ msg: err.message })
     }
 
 }
+
+
+
+
 const blog = async function (req, res) {
+
+    try{
     let data = req.body
 
+    let isPublished = req.body.isPublished
+
+    if(isPublished == true){
+        let date = Date.now()
+        req.body.publishedAt = date
+        req.body.isPublished = true
+    }
+
+
     let newData = await blogModel.create(data)
-
-    res.send({ ok: newData })
-
+    res.status(201).send({ ok: newData })
+    
+    }catch(err){
+        console.log(err)
+        res.status(500).send({ msg: err.message })
+    }
 
 }
 
