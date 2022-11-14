@@ -38,17 +38,23 @@ const blog = async function (req, res) {
     let data = req.body
 
     let isPublished = req.body.isPublished
-
-    if(isPublished == true){
-        let date = Date.now()
+    let isDeleted = req.body.isDeleted
+    let date = Date.now()
+    
+    if(isPublished){
         req.body.publishedAt = date
-        req.body.isPublished = true
+        isPublished = true
+    }
+
+    if(isDeleted){
+        req.body.deletedAt = date
+        isDeleted = true
     }
 
 
     let newData = await blogModel.create(data)
     res.status(201).send({ ok: newData })
-    
+
     }catch(err){
         console.log(err)
         res.status(500).send({ msg: err.message })
