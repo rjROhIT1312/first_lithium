@@ -12,7 +12,7 @@ const authors = async function (req, res) {
 
         let { fname, lname, title, password } = req.body
 
-        if (!fname || !lname || !password || !title) return res.status(400).send({ Status: flase, msg: "Mandatory field is not given" })
+        if (!fname || !lname || !password || !title) return res.status(400).send({ Status: false, msg: "Mandatory field is not given" })
         
 
         
