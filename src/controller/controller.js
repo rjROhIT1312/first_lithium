@@ -10,13 +10,13 @@ const authors = async function (req, res) {
 
 
 
-        if (!fname || !lname || !password) return res.status(401).send({ Status: flase, msg: "Mandatory field is not given" })
+        if (!fname || !lname || !password) return res.status(400).send({ Status: flase, msg: "Mandatory field is not given" })
 
         let email = req.body.email
-        if (!emailValidator.validate(email)) return res.status(401).send("Email id is invalid.")
+        if (!emailValidator.validate(email)) return res.status(400).send("Email id is invalid.")
 
 
-        let newData = await authorModel.create(data)   // // Making Blog
+        let newData = await authorModel.create(data)
 
 
 
@@ -37,7 +37,7 @@ const blog = async function (req, res) {
     try {
         let { title, body, authorId , category } = req.body
 
-        let data = req.body
+
 
         if (!title || !body || !authorId || !category) return res.status(401).send({ Status: flase, msg: "Mandatory field is not given" })
 
@@ -56,16 +56,6 @@ const blog = async function (req, res) {
         }
 
 
-
-        
-
-        authorId = req.body.authorId
-        let isAuthorPresent = await authorModel.findOne({_id : authorId})
-        if(! isAuthorPresent) return res.status(401).send({ Status: false, msg: "Invalid Author Id" })
-
-
-
-
         let newData = await blogModel.create(data)
         res.status(201).send({ ok: newData })
 
@@ -76,33 +66,21 @@ const blog = async function (req, res) {
 
 }
 
-
-
-
 const allBlog = async function(req,res){
 
     try{
 
-        const {authorId , category , tags , subcategory  } = req.query
-
-
-        let data ;
-
-        // if(!authorId && !category && !tags && !subcategory){
-        //     data = await blogModel.find({ isDeleted : false ,isPublished : true }).populate("authorId")
-        // }else{
-            
-        //     data = await blogModel.find(  { isDeleted : false ,isPublished : true  , $or : [{ authorId : authorId} , {category : category} ] }).populate("authorId")
-        // }
+        const authorId = req.query.authorId
 
 
 
-        if(!authorId ){
+        if(!authorId){
             data = await blogModel.find({ isDeleted : false ,isPublished : true })
         }else{
             
             data = await blogModel.find({ authorId : authorId , isDeleted : false ,isPublished : true})
         }
+
 
 
 
@@ -123,7 +101,4 @@ const allBlog = async function(req,res){
 
 
 
-
-
-
-module.exports = { authors, blog ,allBlog }
+module.exports = { authors, blog,allBlog }
