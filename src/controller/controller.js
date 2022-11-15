@@ -146,7 +146,7 @@ const allBlogs = async function (req, res) {
 // // // // Till Day 1 ------
 
 
-
+// // // Start day 2
 
 const updateBlog = async function (req, res) {
     try {
