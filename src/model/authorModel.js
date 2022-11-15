@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const authorSchema = new mongoose.Schema( {
     fname: {
         type: String, 
+        trim : true ,
         required: true
     }, 
     lname: {
         type: String, 
+        trim : true ,
         required: true
     }, 
     title: {
@@ -18,11 +20,10 @@ const authorSchema = new mongoose.Schema( {
         type : String , 
         required : true,
         unique:true,
-    
-  
     },
     password: {
         type:String,
+        trim : true ,
         required:true
     }
     

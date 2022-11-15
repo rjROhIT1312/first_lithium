@@ -14,9 +14,20 @@ router.post("/authors", controller.authors)
 
 
 
-router.post("/blog", controller.blog)
+router.post("/blogs", controller.blogs)
 
 
-router.get("/blog", controller.allBlog)
+router.get("/blogs", controller.allBlogs)
+
+
+router.put("/blogs/:blogId", controller.updateBlog);
+
+
+router.delete("/blogs/:blogId", controller.deleteBlog)
+
+
+router.delete("/blogs" ,controller.deletBlogByQuery )
+
+
 
 module.exports = router
