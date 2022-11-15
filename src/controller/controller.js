@@ -34,7 +34,7 @@ const authors = async function (req, res) {
 
     } catch (err) {
         console.log(err)
-        res.status(500).send({ msg: err.message })
+        res.status(500).send({status:false, msg: err.message })
     }
 
 }
@@ -53,6 +53,13 @@ const blog = async function (req, res) {
 
         if (!title || !body || !authorId || !category) return res.status(400).send({ Status: false, msg: "Mandatory field is not given" })
 
+        // // Extractin author id from body and checking , this authorId present in DB collection or not. if not present then send error.
+        authorId = req.body.authorId
+
+        let isAuthorPresent = await authorModel.findOne({_id : authorId})
+
+        if(! isAuthorPresent ) return res.status(400).send({ Status: false, msg: "Invalid Author Id" })
+
         // // Extracting two keys from body bez we need to do extra date acc. to true or false.
         let isPublished = req.body.isPublished
         let isDeleted = req.body.isDeleted
@@ -70,21 +77,13 @@ const blog = async function (req, res) {
         }
 
 
-        // // Extractin author id from body and checking , this authorId present in DB collection or not. if not present then send error.
-        authorId = req.body.authorId
-
-        let isAuthorPresent = await authorModel.findOne({_id : authorId})
-
-        if(! isAuthorPresent ) return res.status(400).send({ Status: false, msg: "Invalid Author Id" })
-
-
         // // // If everyThing is right then created blog with this data and send back into response. 
         let newData = await blogModel.create(data)
-        res.status(201).send({ ok: newData })
+        res.status(201).send({ status:true,data: newData })
 
     } catch (err) {
         console.log(err)
-        res.status(500).send({ msg: err.message })
+        res.status(500).send({status:false, msg: err.message })
     }
 
 }
@@ -125,7 +124,7 @@ const allBlog = async function(req,res){
 
     }catch(err){
         console.log(err)
-        res.status(500).send({ msg: err.message })
+        res.status(500).send({ status:false,msg: err.message })
     }
     
 
