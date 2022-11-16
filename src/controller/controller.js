@@ -30,7 +30,7 @@ const authors = async function (req, res) {
 
         if (!emailValidator.validate(email)) return res.status(400).send({ Status: false, msg: "Invalid Email id , please give valid email id." })
 
-        // // Or
+        // Or
 
         //  let emailFormat = /^([a-zA-Z0-9\.-]+)@([a-zA-Z0-9-]+).([a-z]{2,20})$/
         // if (!email.match(emailFormat)) return res.status(400).send("Email id is invalid.")
@@ -171,8 +171,8 @@ const updateBlog = async function (req, res) {
             return res.status(404).send({ Status: false, Message: "Blog is already deleted" });
         }
 
+        // For PublisheAt value --->
         let publishDateAndTime;
-
         req.body.isPublished ? publishDateAndTime = Date.now() : publishDateAndTime = null
 
         let updatedBlog = await blogModel.findOneAndUpdate(
@@ -232,14 +232,16 @@ const deletBlogByQuery = async function (req, res) {
         const query = req.query
         const { category, authorId, tags, subcategory, isPublished } = query
 
-        let findObj = { isDeleted: false }
+        // // // In next line we are looking user is authentic or not.(Taking id from req attribute)
+        let tokenAuthorId = req.tokenAuthorId
+
+        // // // In next line we matching data with authorId that given in token and also isDeleted false.
+        let findObj = { isDeleted: false , authorId : tokenAuthorId }
 
         if (category) {
             findObj["category"] = category
         }
-        if (authorId) {
-            findObj["authorId"] = authorId
-        }
+
         if (tags) {
             findObj["tags"] = tags
         }
@@ -252,7 +254,7 @@ const deletBlogByQuery = async function (req, res) {
 
 
         // // Any data coming on query or not ?
-        if (Object.keys(findObj).length <= 1) return res.status(400).send({ Status: false, msg: "Please give some data that you want to delete" })
+        if (Object.keys(findObj).length <= 2) return res.status(400).send({ Status: false, msg: "Please give some data that you want to delete" })
 
         let data = await blogModel.updateMany(
             findObj,
@@ -311,4 +313,4 @@ const loginAuthor = async function (req, res) {
 
 
 
-module.exports = { authors, blogs, allBlogs, updateBlog, deleteBlog, deletBlogByQuery, loginAuthor }
+module.exports = { authors , blogs, allBlogs, updateBlog, deleteBlog, deletBlogByQuery, loginAuthor }
