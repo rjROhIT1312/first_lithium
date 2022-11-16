@@ -5,8 +5,10 @@ const emailValidator = require("email-validator")
 
 // // For objectId validation -->
 const mongoose = require('mongoose');
-ObjectId = mongoose.Types.ObjectId;
 
+
+
+const jwt = require("jsonwebtoken")
 
 
 
@@ -62,7 +64,7 @@ const blogs = async function (req, res) {
         // // Extractin author id from body and checking , this authorId present in DB collection or not. if not present then send error.
         authorId = req.body.authorId
 
-        if (! mongoose.Types.ObjectId.isValid(authorId)) return res.status(400).send({ Status: false, msg: "Invalid Author Id" })
+        if (!mongoose.Types.ObjectId.isValid(authorId)) return res.status(400).send({ Status: false, msg: "Invalid Author Id" })
 
 
         // // // Find data with authorId
@@ -150,30 +152,32 @@ const allBlogs = async function (req, res) {
 
 const updateBlog = async function (req, res) {
     try {
-        
+
         let updatedBody = req.body;
         let { title, body, category, isPublished, tags, subcategory } = updatedBody;
 
         if (Object.keys(updatedBody).length <= 0) return res.status(400).send({ Status: false, Message: "Data must be present" });
 
         let blogId = req.params.blogId;
-        if (! mongoose.Types.ObjectId.isValid(blogId)) return res.status(400).send({ Status: false, msg: "Invalid Blog Id" })
+
+        // if (!mongoose.Types.ObjectId.isValid(blogId)) return res.status(400).send({ Status: false, msg: "Invalid Blog Id" })
+
         let blogPresent = await blogModel.findById(blogId);
 
         if (!blogPresent) return res.status(400).send({ Status: false, Message: "Blog id is Incorrect" });
-        
+
 
         if (blogPresent["isDeleted"] == true) {
             return res.status(404).send({ Status: false, Message: "Blog is already deleted" });
         }
 
-        let publishDateAndTime ;
+        let publishDateAndTime;
 
-        req.body.isPublished ? publishDateAndTime=Date.now() : publishDateAndTime=null
+        req.body.isPublished ? publishDateAndTime = Date.now() : publishDateAndTime = null
 
-        let  updatedBlog = await blogModel.findOneAndUpdate(
+        let updatedBlog = await blogModel.findOneAndUpdate(
             { _id: blogId },
-            { $set: { title,  body,  category,  isPublished, publishedAt : publishDateAndTime }, $push: { tags: tags, subcategory: subcategory } },
+            { $set: { title, body, category, isPublished, publishedAt: publishDateAndTime }, $push: { tags: tags, subcategory: subcategory } },
             { new: true }
         );
 
@@ -197,7 +201,7 @@ const deleteBlog = async function (req, res) {
 
         // // Check object id is valid or not by mongoose predefind method.
 
-        if (! mongoose.Types.ObjectId.isValid(blogId)) return res.status(400).send({ Status: false, msg: "Invalid Blog Id" })
+        // if (!mongoose.Types.ObjectId.isValid(blogId)) return res.status(400).send({ Status: false, msg: "Invalid Blog Id" })
 
 
         let isBlogPresent = await blogModel.findOne({ _id: blogId })
@@ -208,7 +212,7 @@ const deleteBlog = async function (req, res) {
         if (isBlogPresent.isDeleted == true) return res.status(400).send({ Status: false, msg: "Blog is already deleted." })
 
 
-        let del = await blogModel.findOneAndUpdate({ _id: blogId , isDeleted: false }, { $set: { isDeleted: true, deletedAt : Date.now()} })
+        let del = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, { $set: { isDeleted: true, deletedAt: Date.now() } })
 
         res.status(200).send()
     } catch (err) {
@@ -228,7 +232,7 @@ const deletBlogByQuery = async function (req, res) {
         const query = req.query
         const { category, authorId, tags, subcategory, isPublished } = query
 
-        let findObj = {isDeleted: false}
+        let findObj = { isDeleted: false }
 
         if (category) {
             findObj["category"] = category
@@ -252,7 +256,7 @@ const deletBlogByQuery = async function (req, res) {
 
         let data = await blogModel.updateMany(
             findObj,
-            { $set: { isDeleted: true , deletedAt: Date.now() } }
+            { $set: { isDeleted: true, deletedAt: Date.now() } }
         )
 
         // How many data matched with condition -->
@@ -272,4 +276,39 @@ const deletBlogByQuery = async function (req, res) {
 
 
 
-module.exports = { authors, blogs, allBlogs, updateBlog, deleteBlog, deletBlogByQuery }
+
+
+const loginAuthor = async function (req, res) {
+
+    try {
+
+        let email = req.body.email
+        let password = req.body.password
+
+        if (!email || !password) return res.status(400).send({ Status: false, msg: "Email and password required , please send it." })
+
+
+        let Author = await authorModel.findOne({ email: email, password: password });
+
+        if (!Author) return res.send({ msg: "Email or password is invalid." });
+
+        console.log(Author)
+
+        let token = jwt.sign({ _id: Author._id.toString() }, "our first project")
+
+        // res.setHeader("x-auth-token", token)
+        res.status(200).send({ status: true, token: token })
+
+    } catch (err) {
+        console.log(err.message)
+        res.status(500).send({ status: false, msg: err.message })
+    }
+
+}
+
+
+
+
+
+
+module.exports = { authors, blogs, allBlogs, updateBlog, deleteBlog, deletBlogByQuery, loginAuthor }

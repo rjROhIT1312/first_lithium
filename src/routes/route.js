@@ -3,6 +3,8 @@ const router = express.Router();
 
 const controller = require("../controller/controller")
 
+const {authorisation , authentication} = require('../middleware/middleware')
+
 
 router.get("/test-me", function (req, res) {
 
@@ -13,20 +15,23 @@ router.get("/test-me", function (req, res) {
 router.post("/authors", controller.authors)
 
 
-
-router.post("/blogs", controller.blogs)
-
-
-router.get("/blogs", controller.allBlogs)
+router.post("/blogs" , authentication, controller.blogs)
 
 
-router.put("/blogs/:blogId", controller.updateBlog);
+
+router.get("/blogs", authentication , controller.allBlogs)
 
 
-router.delete("/blogs/:blogId", controller.deleteBlog)
+router.put("/blogs/:blogId", authentication , authorisation , controller.updateBlog);
 
 
-router.delete("/blogs" ,controller.deletBlogByQuery )
+router.delete("/blogs/:blogId", authentication ,authorisation , controller.deleteBlog)
+
+
+router.delete("/blogs" , authentication , controller.deletBlogByQuery )
+
+
+router.post("/login" , controller.loginAuthor)
 
 
 
