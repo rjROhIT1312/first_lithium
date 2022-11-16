@@ -294,7 +294,7 @@ const loginAuthor = async function (req, res) {
 
         if (!Author) return res.send({ msg: "Email or password is invalid." });
 
-        console.log(Author)
+        // // console.log(Author)
 
         let token = jwt.sign({ _id: Author._id.toString() }, "our first project")
 
