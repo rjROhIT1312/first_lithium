@@ -7,29 +7,24 @@ const mongoose = require('mongoose');
 const authentication = function (req, res, next) {
 
     try {
-
         let token = req.headers['x-api-key']
-
         if (!token) return res.status(400).send("Token is not present in header")
 
         // console.log(token)
-
         let verifyPlaylodData = jwt.verify(token, "our first project")
 
-        // console.log(verifyPlaylodData)
+        // // Now token is Decoded. 
 
         // // Set attri. in request --> Used in autherisation , this tokenAuthorId
         req.tokenAuthorId = verifyPlaylodData._id
 
         // console.log(verifyPlaylodData._id)
 
-
         next()
 
     } catch (err) {
         res.status(401).send({ status: false, msg: "Token invalid" })
     }   
-
 
 }
 
@@ -43,7 +38,7 @@ const authorisation = async function (req, res, next) {
 
         let tokenAuthorId = req.tokenAuthorId
         let blogId = req.params.blogId
-
+        
         // console.log(tokenAuthorId)
         // console.log()
         if (!mongoose.Types.ObjectId.isValid(blogId)) return res.status(400).send({ Status: false, msg: "Invalid Blog Id." })
