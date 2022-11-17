@@ -29,7 +29,7 @@ const blogs = async function (req, res) {
         // // // Find data with authorId
         let isAuthorPresent = await authorModel.findOne({ _id: authorId })
 
-        if (!isAuthorPresent) return res.status(400).send({ Status: false, msg: "Invalid Author Id" })
+        if (!isAuthorPresent) return res.status(400).send({ Status: false, message: "Invalid Author Id" })
 
         // // Extracting two keys from body bez we need to do extra date acc. to true or false.
         let isPublished = req.body.isPublished
@@ -54,7 +54,7 @@ const blogs = async function (req, res) {
 
     } catch (err) {
         console.log(err)
-        res.status(500).send({ status: false, msg: err.message })
+        res.status(500).send({ status: false, message: err.message })
     }
 
 }
@@ -92,13 +92,13 @@ const allBlogs = async function (req, res) {
         // // // Find data with findObj , if no data find then send 404 err No Data Found otherwise send data in response.
         let data = await blogModel.find(findObj)
 
-        if (data.length <= 0) return res.status(404).send({ Status: false, msg: 'No Data Found' })
+        if (data.length <= 0) return res.status(404).send({ Status: false, message: 'No Data Found' })
 
         res.status(200).send({ Status: true, AllDataAre: data.length, data: data })
 
     } catch (err) {
         console.log(err)
-        res.status(500).send({ status: false, msg: err.message })
+        res.status(500).send({ status: false, message: err.message })
     }
 
 
@@ -115,7 +115,7 @@ const updateBlog = async function (req, res) {
         let updatedBody = req.body;
         let { title, body, category, isPublished, tags, subcategory } = updatedBody;
 
-        if (Object.keys(updatedBody).length <= 0) return res.status(400).send({ Status: false, Message: "Data must be present" });
+        if (Object.keys(updatedBody).length <= 0) return res.status(400).send({ status: false, message: "Data must be present" });
 
         let blogId = req.params.blogId;
 
@@ -123,11 +123,11 @@ const updateBlog = async function (req, res) {
 
         let blogPresent = await blogModel.findById(blogId);
 
-        if (!blogPresent) return res.status(400).send({ Status: false, Message: "Blog id is Incorrect" });
+        if (!blogPresent) return res.status(400).send({ status: false, message: "Blog id is Incorrect" });
 
 
         if (blogPresent["isDeleted"] == true) {
-            return res.status(404).send({ Status: false, Message: "Blog is already deleted" });
+            return res.status(404).send({ status: false, message: "Blog is already deleted" });
         }
 
         // For PublisheAt value --->
@@ -141,10 +141,10 @@ const updateBlog = async function (req, res) {
         );
 
 
-        res.status(200).send({ Status: true, Message: "Blog has been successfully updated", Data: updatedBlog });
+        res.status(200).send({ status: true, message: "Blog has been successfully updated", Data: updatedBlog });
 
     } catch (Error) {
-        return res.status(500).send({ Status: false, Message: Error.message || "Some server error occured" });
+        return res.status(500).send({ status: false, message: Error.message || "Some server error occured" });
 
     }
 
@@ -165,7 +165,7 @@ const deleteBlog = async function (req, res) {
 
         let isBlogPresent = await blogModel.findOne({ _id: blogId })
 
-        if (!isBlogPresent) return res.status(400).send({ Status: false, msg: "Invalid Blog Id or the blog is not exist" })
+        if (!isBlogPresent) return res.status(400).send({ Status: false, message: "Invalid Blog Id or the blog is not exist" })
 
 
         if (isBlogPresent.isDeleted == true) return res.status(400).send({ Status: false, msg: "Blog is already deleted." })
@@ -216,7 +216,7 @@ const deletBlogByQuery = async function (req, res) {
 
 
         // // Any data coming on query or not ?
-        if ( Object.keys(findObj).length <= 3) return res.status(400).send({ Status: false, msg: "Please give some data that you want to delete that is not deleted" })
+        if ( Object.keys(findObj).length <= 3) return res.status(400).send({ Status: false, message: "Please give some data that you want to delete that is not deleted" })
 
         let data = await blogModel.updateMany(
             findObj,
@@ -224,9 +224,9 @@ const deletBlogByQuery = async function (req, res) {
         )
 
         // How many data matched with condition -->
-        if (data.matchedCount <= 0) return res.status(404).send({ status: false, msg: "No Data Found" })
+        if (data.matchedCount <= 0) return res.status(404).send({ status: false, message: "No Data Found" })
 
-        res.status(200).send({ status: true, msg: `${data.matchedCount} is deleted` })
+        res.status(200).send({ status: true, message: `${data.matchedCount} is deleted` })
 
     } catch (err) {
         console.log(err)

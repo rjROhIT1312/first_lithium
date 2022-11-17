@@ -20,14 +20,14 @@ const authors = async function (req, res) {
 
         if(!fname.match(matchNames) ||  !lname.match(matchNames)) return res.status(400).send({status : false , message : "Invalid formate for First Name or Last Name"})
 
-        if (!fname || !lname || !password || !title) return res.status(400).send({ Status: false, msg: "Mandatory field is not given" })
+        if (!fname || !lname || !password || !title) return res.status(400).send({ Status: false, message: "Mandatory field is not given" })
 
 
         // // Email extracting from body to verify given email is correct or not.
         let email = req.body.email
 
 
-        if (!emailValidator.validate(email)) return res.status(400).send({ Status: false, msg: "Invalid Email id , please give valid email id." })
+        if (!emailValidator.validate(email)) return res.status(400).send({ Status: false, message: "Invalid Email id , please give valid email id." })
 
         // Or
 
@@ -37,7 +37,7 @@ const authors = async function (req, res) {
         let emailUnique = await authorModel.findOne({email : email})
 
         if(emailUnique) return res.status(400).status({status : false , message : "Email is already exist , please provide other."})
-        
+
 
         // // If everyThing is right then create data in DB and send back newy formed data.
         let newData = await authorModel.create(data)   // // Making Blog
@@ -46,7 +46,7 @@ const authors = async function (req, res) {
 
     } catch (err) {
         console.log(err)
-        res.status(500).send({ status: false, msg: err.message })
+        res.status(500).send({ status: false, message: err.message })
     }
 
 }
@@ -65,7 +65,7 @@ const loginAuthor = async function (req, res) {
         let email = req.body.email
         let password = req.body.password
 
-        if (!email || !password) return res.status(400).send({ Status: false, msg: "Email and password required , please send it." })
+        if (!email || !password) return res.status(400).send({ Status: false, message: "Email and password required , please send it." })
 
 
         let Author = await authorModel.findOne({ email: email, password: password });
@@ -81,7 +81,7 @@ const loginAuthor = async function (req, res) {
 
     } catch (err) {
         console.log(err.message)
-        res.status(500).send({ status: false, msg: err.message })
+        res.status(500).send({ status: false, message: err.message })
     }
 
 }
