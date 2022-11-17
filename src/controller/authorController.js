@@ -18,9 +18,11 @@ const authors = async function (req, res) {
         // // All Mandatory field taking out and checking present or not , if  not present then send an err msg. 
         let { fname, lname, title, password } = req.body
 
+        if (!fname || !lname || !password || !title) return res.status(400).send({ Status: false, message: "Mandatory field is not given" })
+
         if(!fname.match(matchNames) ||  !lname.match(matchNames)) return res.status(400).send({status : false , message : "Invalid formate for First Name or Last Name"})
 
-        if (!fname || !lname || !password || !title) return res.status(400).send({ Status: false, message: "Mandatory field is not given" })
+        if( title !== "Mr" || title !== "Miss" || title !== "Mrs") return res.status(400).send({status : false , message : "Given tittle is invalid (Only Mr , Mrs , Miss is valid)"})
 
 
         // // Email extracting from body to verify given email is correct or not.
