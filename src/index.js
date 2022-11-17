@@ -4,8 +4,9 @@ const route = require("./routes/route")
 const mongoose  = require('mongoose');
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+
+app.use(express.json())
 
 
 mongoose.connect("mongodb+srv://rjrohit13:bThZ1H4sEACa5DqQ@cluster0.fo02cni.mongodb.net/Project1", {
@@ -16,6 +17,9 @@ mongoose.connect("mongodb+srv://rjrohit13:bThZ1H4sEACa5DqQ@cluster0.fo02cni.mong
 
 app.use('/', route);
 
+app.use( (req ,res) => {
+    res.status(404).send({status : false , message : "Url is inorrect"})
+})
 
 app.listen(process.env.PORT || 3000, function () {
     console.log('Express app running on port ' + (process.env.PORT || 3000))

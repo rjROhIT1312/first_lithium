@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const controller = require("../controller/controller")
+const blogController = require("../controller/blogController")
+
+const authorController = require("../controller/authorController")
 
 const {authorisation , authentication} = require('../middleware/middleware')
 
@@ -9,25 +11,25 @@ const {authorisation , authentication} = require('../middleware/middleware')
 router.get("/test-me", (req, res)=> { res.status(200).send("All Done")})
 
 
-router.post("/authors", controller.authors)
+router.post("/authors", authorController.authors)
 
 
-router.post("/blogs" , authentication, controller.blogs)
+router.post("/blogs" , authentication, blogController.blogs)
 
 
-router.get("/blogs", authentication , controller.allBlogs)
+router.get("/blogs", authentication , blogController.allBlogs)
 
 
-router.put("/blogs/:blogId", authentication , authorisation , controller.updateBlog);
+router.put("/blogs/:blogId", authentication , authorisation , blogController.updateBlog);
 
 
-router.delete("/blogs/:blogId", authentication , authorisation , controller.deleteBlog)
+router.delete("/blogs/:blogId", authentication , authorisation , blogController.deleteBlog)
 
 
-router.delete("/blogs" , authentication , controller.deletBlogByQuery )
+router.delete("/blogs" , authentication , blogController.deletBlogByQuery )
 
 
-router.post("/login" , controller.loginAuthor)
+router.post("/login" , authorController.loginAuthor)
 
 
 
