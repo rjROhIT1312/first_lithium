@@ -36,7 +36,7 @@ const authors = async function (req, res) {
 
         let emailUnique = await authorModel.findOne({email : email})
 
-        if(emailUnique) return res.status(400).status({status : false , message : "Email is already exist , please provide other."})
+        if(emailUnique) return res.status(400).send({status : false , message : "Email is already exist , please provide other."})
 
 
         // // If everyThing is right then create data in DB and send back newy formed data.
