@@ -53,12 +53,12 @@ const authorisation = async function (req, res, next) {
 
         // console.log(authorInBlog, blogData.authorId)
 
-        if (authorInBlog.toString() !== tokenAuthorId.toString()) return res.status(403).send({ status: false, msg: "Unauthorize person" })
+        if (authorInBlog.toString() !== tokenAuthorId.toString()) return res.status(403).send({ status: false, msg: "Unauthorize person , forbidden" })
 
 
         next()
 
-    } catch (err) {
+    } catch (err) { 
         console.log(err.message)
         res.status(500).send({ status: false, msg: err.message })
     }
