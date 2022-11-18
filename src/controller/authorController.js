@@ -22,7 +22,7 @@ const authors = async function (req, res) {
 
         if(!fname.match(matchNames) ||  !lname.match(matchNames)) return res.status(400).send({status : false , message : "Invalid formate for First Name or Last Name"})
 
-        if( title !== "Mr" || title !== "Miss" || title !== "Mrs") return res.status(400).send({status : false , message : "Given tittle is invalid (Only Mr , Mrs , Miss is valid)"})
+        if( title !== "Mr" && title !== "Miss" && title !== "Mrs") return res.status(400).send({status : false , message : "Given tittle is invalid (Only Mr , Mrs , Miss is valid)"})
 
 
         // // Email extracting from body to verify given email is correct or not.
