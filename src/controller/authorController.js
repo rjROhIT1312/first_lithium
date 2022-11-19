@@ -18,7 +18,7 @@ const authors = async function (req, res) {
         // // All Mandatory field taking out and checking present or not , if  not present then send an err msg. 
         let { fname, lname, title, password } = req.body
 
-        if (!fname || !lname || !password || !title) return res.status(400).send({ Status: false, message: "Mandatory field is not given" })
+        if (!fname || !lname || !password || !title) return res.status(400).send({ status: false, message: "Mandatory field is not given" })
 
         if(!fname.match(matchNames) ||  !lname.match(matchNames)) return res.status(400).send({status : false , message : "Invalid formate for First Name or Last Name"})
 
@@ -29,7 +29,7 @@ const authors = async function (req, res) {
         let email = req.body.email
 
 
-        if (!emailValidator.validate(email)) return res.status(400).send({ Status: false, message: "Invalid Email id , please give valid email id." })
+        if (!emailValidator.validate(email)) return res.status(400).send({ status: false, message: "Invalid Email id , please give valid email id." })
 
         // Or
 
@@ -67,12 +67,12 @@ const loginAuthor = async function (req, res) {
         let email = req.body.email
         let password = req.body.password
 
-        if (!email || !password) return res.status(400).send({ Status: false, message: "Email and password required , please send it." })
+        if (!email || !password) return res.status(400).send({ status: false, message: "Email and password required , please send it." })
 
 
         let Author = await authorModel.findOne({ email: email, password: password });
 
-        if (!Author) return res.send({ msg: "Email or password is invalid." });
+        if (!Author) return res.status(400).send({status : false , msg: "Email or password is invalid." });
 
         // // console.log(Author)
 

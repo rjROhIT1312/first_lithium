@@ -18,18 +18,18 @@ const blogs = async function (req, res) {
         // // All Mandatory field taking out and checking present or not , if  not present then send an err msg. 
         let { title, body, authorId, category } = req.body
 
-        if (!title || !body || !authorId || !category) return res.status(400).send({ Status: false, msg: "Mandatory field is not given" })
+        if (!title || !body || !authorId || !category) return res.status(400).send({ status: false, msg: "Mandatory field is not given" })
 
         // // Extractin author id from body and checking , this authorId present in DB collection or not. if not present then send error.
         authorId = req.body.authorId
 
-        if (!mongoose.Types.ObjectId.isValid(authorId)) return res.status(400).send({ Status: false, msg: "Invalid Author Id" })
+        if (!mongoose.Types.ObjectId.isValid(authorId)) return res.status(400).send({ status: false, msg: "Invalid Author Id" })
 
 
         // // // Find data with authorId
         let isAuthorPresent = await authorModel.findOne({ _id: authorId })
 
-        if (!isAuthorPresent) return res.status(400).send({ Status: false, message: "Invalid Author Id" })
+        if (!isAuthorPresent) return res.status(400).send({ status: false, message: "Invalid Author Id" })
 
         // // Extracting two keys from body bez we need to do extra date acc. to true or false.
         let isPublished = req.body.isPublished
@@ -92,9 +92,9 @@ const allBlogs = async function (req, res) {
         // // // Find data with findObj , if no data find then send 404 err No Data Found otherwise send data in response.
         let data = await blogModel.find(findObj)
 
-        if (data.length <= 0) return res.status(404).send({ Status: false, message: 'No Data Found' })
+        if (data.length <= 0) return res.status(404).send({ status: false, message: 'No Data Found' })
 
-        res.status(200).send({ Status: true, AllDataAre: data.length, data: data })
+        res.status(200).send({ status: true, AllDataAre: data.length, data: data })
 
     } catch (err) {
         console.log(err)
@@ -165,10 +165,10 @@ const deleteBlog = async function (req, res) {
 
         let isBlogPresent = await blogModel.findOne({ _id: blogId })
 
-        if (!isBlogPresent) return res.status(400).send({ Status: false, message: "Invalid Blog Id or the blog is not exist" })
+        if (!isBlogPresent) return res.status(400).send({ status: false, message: "Invalid Blog Id or the blog is not exist" })
 
 
-        if (isBlogPresent.isDeleted == true) return res.status(400).send({ Status: false, msg: "Blog is already deleted." })
+        if (isBlogPresent.isDeleted == true) return res.status(400).send({ status: false, msg: "Blog is already deleted." })
 
 
         let del = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, { $set: { isDeleted: true, deletedAt: Date.now() } })
@@ -216,7 +216,7 @@ const deletBlogByQuery = async function (req, res) {
 
 
         // // Any data coming on query or not ?
-        if ( Object.keys(findObj).length <= 3) return res.status(400).send({ Status: false, message: "Please give some data that you want to delete that is not deleted" })
+        if ( Object.keys(findObj).length <= 3) return res.status(400).send({ status: false, message: "Please give some data that you want to delete that is not deleted" })
 
         let data = await blogModel.updateMany(
             findObj,
