@@ -1,5 +1,5 @@
 const express = require('express');
-const route = require("./routes/route")
+const route = require("./routes/router")
 const mongoose  = require('mongoose');
 const app = express();
 
@@ -16,7 +16,7 @@ mongoose.connect("mongodb+srv://rjrohit13:bThZ1H4sEACa5DqQ@cluster0.fo02cni.mong
 app.use('/', route);
 
 app.use( (req ,res) => {
-    res.status(404).send({status : false , message : "Url is inorrect"})
+    res.status(404).send({status : false , message :`Page Not Found , Given URL ${req.url} is incorrect for this application.`})
 })
 
 app.listen(process.env.PORT || 3000, function () {

@@ -8,22 +8,31 @@ const authentication = function (req, res, next) {
 
     try {
         let token = req.headers['x-api-key']
-        if (!token) return res.status(400).send("Token is not present in header")
+        if (!token) return res.status(404).send({ status:false , message : "Token is not present in header"})
 
+
+        let payloadData ;
         // console.log(token)
-        let verifyPlaylodData = jwt.verify(token, "our first project")
+        let verifytoken = jwt.verify( token, "our first project" , function(err , decoded){
+            payloadData = decoded
+            if(err) return res.status(401).send({status : false , message : "Authentication failed."})
+        })
 
         // // Now token is Decoded. 
+        // // verifytoken token will give undefined becoz we are using call back func. inside .verify() and this call back stores two thing , First is err so we can write if statement when error comes with sutabile status code with sutabile msg and Second is decoded data that we need to store some whare so for that we are storing that data in payloaData variable. 
+
+        // console.log(payloadData)
+    
 
         // // Set attri. in request --> Used in autherisation , this tokenAuthorId
-        req.tokenAuthorId = verifyPlaylodData._id
+        req.tokenAuthorId = payloadData._id
 
-        // console.log(verifyPlaylodData._id)
+        console.log(req.tokenAuthorId)
 
         next()
 
     } catch (err) {
-        res.status(401).send({ status: false, msg: "Token invalid" })
+        res.status(500).send({ status: false, msg: err.message })
     }   
 
 }
