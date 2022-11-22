@@ -2,10 +2,12 @@ const collegeModel =require('../model/collegeModel')
 const internModel = require('../model/interModel')
 const mongoose = require('mongoose')
 
-const checkEmail = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/  //regex for email
+const checkEmail = /^[a-z0-9+_.-]+@[a-z0-9.-]+$/  //regex for email
 const checkName =  /^[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/     //regex for name
 const checkMobile = /^[0-9]{10,10}$/   //regex for mobile
 
+
+//<<<<<<<<------------------- Create-Intern -------------------->>>>>>>>>>>>>
 
 const createIntern = async function(req,res){
     try{
@@ -18,29 +20,32 @@ const createIntern = async function(req,res){
         if(!name)
         return res.status(400).send({status:false,message:"Please enter Name!"})
         if(!checkName.test(name)){
-            return res.status(400).send({status:false,message:"Please Enter Valid Name!"})
+            return res.status(403).send({status:false,message:"Please Enter Valid Name!"})
         }
         //mobile 
-        const search = await internModel.findOne({mobile:mobile})
-        if(search){
-            return res.status(400).send({status:false,message:"Mobile is already exist!"})
-        }
         if(!mobile)
         return res.status(400).send({status:false,message:"Please enter mobile!"})
         if(!checkMobile.test(mobile)){
-            return res.status(400).send({status:false,message:"Please Enter Valid Mobile Number!"})
+            return res.status(403).send({status:false,message:"Please Enter Valid Mobile Number!"})
         }
+        
+        const searchMobile = await internModel.findOne({mobile:mobile})
+        if(searchMobile){
+            return res.status(400).send({status:false,message:"Mobile is already exist!"})
+        }
+       
 
        //email
-        const search2 = await internModel.findOne({email:email})
-        if(search2){
-            return res.status(400).send({status:false,message:"Email-Id is already exist!"})
-        }
-        if(!email)
+       if(!email)
         return res.status(400).send({status:false,message:"Please enter Email!"})
         if(!checkEmail.test(email)){
-            return res.status(400).send({status:false,message:"Not a valid Email"})
+            return res.status(403).send({status:false,message:"Not a valid Email"})
         }
+        const searchEmail = await internModel.findOne({email:email})
+        if(searchEmail){
+            return res.status(400).send({status:false,message:"Email-Id is already exist!"})
+        }
+      
 
       //create intern
         let collegeName = data.collegeName
@@ -62,16 +67,27 @@ const createIntern = async function(req,res){
     }
 }
 
-//get details
+
+//<<<<<<<<------------------- Getting-College -------------------->>>>>>>>>>>>>
+
 const getCollege = async function(req,res){
     try{
         let collegeName = req.query.collegeName
-       
+        if(!collegeName){
+        return res.status(400).send({status:false,message:"Please provide College name !"})
+        }
 
+       
         let findCllg = await collegeModel.findOne({name:collegeName})
+        if(!findCllg){
+            return res.status(404).send({status:false,message:"College Not found !"})
+            }
         let id =findCllg["_id"]
 
         let result = await internModel.find({collegeId:id}).select({_id:1,name:1,email:1,mobile:1})
+        if(!result){
+            return res.status(404).send({status:false,message:"No intern Found from this College !"})
+            }
         let finalData ={name:collegeName,fullName:findCllg.fullName,logoLink:findCllg.logoLink,
             interns:[result]}
             
