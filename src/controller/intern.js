@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const checkEmail = /^[a-z0-9_]{2,}@[gmail]{3,}.[com]{3}$/  //regex for email
 const checkName =  /^[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/     //regex for name
 const checkMobile = /^[0-9]{10,10}$/   //regex for mobile
+const clgName =  /^([A-Za-z]+)$/
 
 
 
@@ -75,8 +76,9 @@ const createIntern = async function(req,res){
 const getCollege = async function(req,res){
     try{
         let collegeName = req.query.collegeName
+        collegeName = collegeName.toLowerCase()
 
-        if(!checkName.test(collegeName)){
+        if(!clgName.test(collegeName)){
             return res.status(400).send({status:false,message:"Please Enter Valid College Name!"})
         }
         if(!collegeName){
