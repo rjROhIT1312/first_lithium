@@ -17,7 +17,7 @@ const createCollege = async function(req,res){
         if(!name)
         return res.status(400).send({status:false,message:"Please enter Name!"})
         if(!clgName.test(name)){
-            return res.status(403).send({status:false,message:"Please Enter Valid Name!"})
+            return res.status(400).send({status:false,message:"Please Enter Valid Name!"})
         }
         const searchName = await collegeModel.findOne({name:name})
         if(searchName){
@@ -29,7 +29,7 @@ const createCollege = async function(req,res){
         if(!fullName)
         return res.status(400).send({status:false,message:"Please enter FullName!"})
          if(!checkName.test(fullName)){
-           return res.status(403).send({status:false,message:"Please Enter Valid FullName!"})
+           return res.status(400).send({status:false,message:"Please Enter Valid FullName!"})
          }
         const searchFullName = await collegeModel.findOne({fullName:fullName})
         if(searchFullName){
@@ -40,7 +40,7 @@ const createCollege = async function(req,res){
         if(!logoLink)
         return res.status(400).send({status:false,message:"Please provide logoLink!"})
         if(!checkLink.test(logoLink)){
-            return res.status(403).send({status:false,message:"Please Enter Valid Link!"})
+            return res.status(400).send({status:false,message:"Please Enter Valid Link!"})
         }
 
         // For creating collage Data -
@@ -51,9 +51,16 @@ const createCollege = async function(req,res){
     catch(err){
         return res.status(500).send({status:false,message:err.message})
     }
-
-
 }
 
 
 module.exports = { createCollege }
+
+
+//validation for url
+/*
+let correctLink = false
+await axios.get(logoLink)
+   .then((res) => { correctLink = true })
+   .catch((error) => { correctLink = false })
+   */
