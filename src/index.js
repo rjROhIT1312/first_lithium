@@ -3,6 +3,8 @@ const bodyParser = require("body-Parser")
 const mongoose = require("mongoose");
 const route = require("./routes/routes");
 const app = express()
+const multer = require("multer");
+app.use(multer().any())
 
 app.use(bodyParser.json());   
 
@@ -20,8 +22,8 @@ app.use( (req ,res) => {
     res.status(404).send({status : false , message :`Page Not Found , Given URL ${req.url} is incorrect for this application.`})
 })
 
-app.listen(process.env.PORT || 3000, function(){
-    console.log("express app runing on port "+(process.env.PORT || 3000) )
+app.listen(process.env.PORT || 3001, function(){
+    console.log("express app runing on port "+(process.env.PORT || 3001) )
 })
 
 
